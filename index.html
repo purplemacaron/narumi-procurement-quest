@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#F7F8FA">
+<meta name="description" content="조달관 나르미 — 카드 의사결정으로 배우는 공공조달 시뮬레이션. 2026 조달청 AI 게임·콘텐츠 공모전 출품작.">
+<title>조달관 나르미 — 공공조달 카드 시뮬레이션</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- 타이틀 -->
+  <section class="screen active" id="screen-title">
+    <div class="title-top">
+      <img class="pps-logo" src="assets/img/pps_logo_h.jpg" alt="조달청"
+           onerror="this.style.display='none'">
+      <button class="icon-btn" id="btn-audio-title" aria-label="소리 켜기/끄기">🔊</button>
+    </div>
+    <div class="title-art">
+      <img class="title-bg" src="assets/img/title.png" alt=""
+           onerror="this.remove()">
+      <span class="title-badge">2026 조달청 공모전 출품작</span>
+      <img class="narumi" src="assets/img/narumi.png" alt="나르미">
+      <img class="dali" src="assets/img/dali.png" alt="달이">
+    </div>
+    <h1 class="game-title">조달관 <span class="accent">나르미</span></h1>
+    <p class="game-sub">카드 한 장으로 지키는 공공조달의 네 가지 가치</p>
+    <p class="game-sub-en retro">NARUMI · PROCUREMENT QUEST</p>
+    <div class="title-stats">
+      <span class="stat">플레이 <b id="stat-plays">0</b></span>
+      <span class="stat">도감 <b id="stat-codex">0/14</b></span>
+      <span class="stat">업적 <b id="stat-ach">0/10</b></span>
+      <span class="stat">엔딩 <b id="stat-end">0/8</b></span>
+    </div>
+    <p id="best-record"></p>
+    <div class="title-btns">
+      <button class="btn primary" id="btn-start">▶ 시작하기</button>
+      <div class="btn-row">
+        <button class="btn" id="btn-title-codex">📚 정책 도감</button>
+        <button class="btn" id="btn-title-ach">🏅 업적</button>
+        <button class="btn" id="btn-title-help">❓ 도움말</button>
+      </div>
+    </div>
+    <p class="title-foot">예산 · 공정성 · 혁신 · 국민만족 — 12개월의 조달 여정<br>캐릭터 © 조달청 · 본 작품은 공모전 출품작입니다</p>
+  </section>
+
+  <!-- 게임 -->
+  <section class="screen" id="screen-game">
+    <div class="game-top">
+      <span id="month-badge" class="retro">1월</span>
+      <div id="turn-pips"></div>
+      <div class="game-top-btns">
+        <button class="icon-btn" id="btn-audio-game" aria-label="소리 켜기/끄기">🔊</button>
+        <button class="icon-btn" id="btn-game-home" aria-label="타이틀로">🏠</button>
+      </div>
+    </div>
+    <div id="gauges"></div>
+    <div id="advisor">
+      <img src="assets/img/dali.png" alt="달이">
+      <span>좌우로 카드를 밀어 결재하세요! 게이지가 0이 되면 조기 엔딩이에요. (키보드 ← → 도 가능)</span>
+    </div>
+    <div class="card-zone">
+      <div class="card-back b2"></div>
+      <div class="card-back b1"></div>
+      <div class="card" id="card-cur"></div>
+    </div>
+    <div class="choice-row">
+      <button class="choice-btn" id="btn-left"></button>
+      <button class="choice-btn" id="btn-right"></button>
+    </div>
+    <div id="month-banner"></div>
+  </section>
+
+  <!-- 엔딩 -->
+  <section class="screen" id="screen-end">
+    <div id="end-box"></div>
+  </section>
+
+  <!-- 정책 도감 -->
+  <div class="overlay" id="overlay-codex">
+    <div class="ov-panel">
+      <div class="ov-head" id="codex-head">
+        <div><h2>📚 정책 도감</h2><span class="sub" id="codex-progress"></span></div>
+        <button class="ov-close" aria-label="닫기">✕</button>
+      </div>
+      <div id="codex-grid"></div>
+      <div id="codex-detail"></div>
+    </div>
+  </div>
+
+  <!-- 업적 -->
+  <div class="overlay" id="overlay-ach">
+    <div class="ov-panel">
+      <div class="ov-head">
+        <div><h2>🏅 업적</h2><span class="sub" id="ach-progress"></span></div>
+        <button class="ov-close" aria-label="닫기">✕</button>
+      </div>
+      <div id="ach-list"></div>
+    </div>
+  </div>
+
+  <!-- 도움말 -->
+  <div class="overlay" id="overlay-help">
+    <div class="ov-panel">
+      <div class="ov-head">
+        <div><h2>❓ 도움말</h2><span class="sub">조달관 나르미 플레이 가이드</span></div>
+        <button class="ov-close" aria-label="닫기">✕</button>
+      </div>
+      <div class="help-body">
+        <div class="hl">
+          <h3>🎯 목표</h3>
+          <p>신임 조달관 나르미가 되어 12개월(12턴) 동안 카드를 좌우로 넘기며 결재합니다.
+          네 게이지를 지키며 완주하면 엔딩 등급(S·A·B)을 받습니다.</p>
+        </div>
+        <div class="hl">
+          <h3>📊 네 가지 게이지</h3>
+          <ul>
+            <li>💰 <b>예산</b> — 곳간. 낭비도, 인색함도 금물.</li>
+            <li>⚖️ <b>공정성</b> — 신뢰. 청탁·담합·특혜에 흔들립니다.</li>
+            <li>💡 <b>혁신</b> — 미래. 시범구매·AI·녹색조달이 키웁니다.</li>
+            <li>😊 <b>국민만족</b> — 마음. 긴급 대응과 소통이 지킵니다.</li>
+          </ul>
+          <p>게이지가 <b>0</b>이 되면 그 가치에 해당하는 조기 엔딩(D)을 봅니다. 20 미만은 위기 경고!</p>
+        </div>
+        <div class="hl">
+          <h3>🕹️ 조작</h3>
+          <ul>
+            <li>카드를 <b>좌/우로 드래그</b>하거나 아래 버튼 클릭</li>
+            <li>키보드 <kbd>←</kbd> <kbd>→</kbd> 로도 결재 가능</li>
+            <li><kbd>Esc</kbd> 로 도감·업적 창 닫기</li>
+          </ul>
+        </div>
+        <div class="hl">
+          <h3>📚 수집 요소</h3>
+          <p>정책 카드에서 실제 조달 정책 도감 14종이 해금됩니다. 엔딩 8종, 업적 10종에 도전하세요.
+          진행 상황은 이 브라우저에 자동 저장됩니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-layer"></div>
+  <canvas id="confetti"></canvas>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/engine.js"></script>
+</body>
+</html>
